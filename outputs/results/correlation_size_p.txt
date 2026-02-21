@@ -1,0 +1,12 @@
+
+	Pearson's product-moment correlation
+
+data:  data$stars and data$size
+t = 11.561, df = 215025, p-value < 2.2e-16
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ 0.02069957 0.02914773
+sample estimates:
+       cor 
+0.02492409 
+
