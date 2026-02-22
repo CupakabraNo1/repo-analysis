@@ -1,9 +1,13 @@
 # most popular language
+
+## count language frequency in data-set and arange them
 languages <- as.data.frame(table(data$language))
 names(languages)[names(languages) == 'Var1'] <- 'language'
 names(languages)[names(languages) == 'Freq'] <- 'count'
 languages <- languages[order(-languages$count), ]
 languages$percent <- languages$count / total_data * 100
+
+## split into top 20 and combine rest into one observation
 languages_top <- head(languages, 20)
 
 languages_other <- languages[-(1:20), ]
@@ -11,19 +15,22 @@ languages_other <- data.frame(
   language = "Other",
   Freq = sum(languages_other$count)
 )
+names(languages_other)[names(languages_other) == 'Var1'] <- 'language'
 names(languages_other)[names(languages_other) == 'Freq'] <- 'count'
-
 languages_other$percent <- sum(languages_other$count) / total_data * 100
+
+## combine top and other data frame
 languages_all <- rbind(languages_top, languages_other)
 
-png("outputs/images/top_10_languages.png", width = 800, height = 600, res = 100) #
+## create barplot of language frequency
+png("outputs/images/top_languages.png", width = 800, height = 600, res = 100) #
 barplot(
   languages_all$count,
   names.arg = languages_all$language,
   las = 2,
   cex.names = 0.5,
   col = "steelblue",
-  main = "Top 20 languages",
+  main = "Top languages",
   ylab = "Count"
 )
 dev.off()
