@@ -1,34 +1,60 @@
 
 # popularity and maintenance
-popularity_and_maintenance <- round(cor(data[,c("stars", "forks", "days_inactive", "issues")]), digits = 2)
-popularity_and_maintenance
+
+## define maintenance variables
+vars <- c("forks", "days_inactive", "issues")
+
+## apply function over a list of vectors
+results <- lapply(vars, function(v) {
+  ### execute test
+  test <- cor.test(data$stars, data[[v]], method = "pearson")
+  
+  ### write result to dataframe row
+  data.frame(
+    variable = v,
+    correlation = round(test$estimate, 4),
+    p_value = signif(test$p.value, 3),
+    ci_lower = round(test$conf.int[1], 4),
+    ci_upper = round(test$conf.int[2], 4)
+  )
+})
+
+## clean data and write to file
+results_table <- do.call(rbind, results)
+rownames(results_table) <- NULL
+results_table
 write.table(
-  popularity_and_maintenance,
-  file = "outputs/results/popularity_and_maintenance.txt",
-  sep = "\t",
+  results_table,
+  file = "outputs/results/popularity_and_maintenance.csv",
+  sep = ",",
+  row.names = FALSE,
   quote = FALSE
 )
 
 # popularity and size
 
-## H0 -> larger repositories are more popular
+## tests Pearson
 correlation_size_p <- cor.test(data$stars, data$size, method = "pearson")
-correlation_size_s <- cor.test(data$stars, data$size, method = "spearman")
 
 correlation_size_p
-correlation_size_s
 
 sink("outputs/results/correlation_size_p.txt")
 print(correlation_size_p)
 sink()
+
+
+## test Spearman
+correlation_size_s <- cor.test(data$stars, data$size, method = "spearman")
+
+correlation_size_s
 
 sink("outputs/results/correlation_size_s.txt")
 print(correlation_size_s)
 sink()
 
 
-results <- data.frame(
-  test = c("Pearson", "Spearman"),
+## combine results
+results <- data.frame(  test = c("Pearson", "Spearman"),
   correlation = c(correlation_size_p$estimate,
                   correlation_size_s$estimate),
   p_value = c(correlation_size_p$p.value,
@@ -37,10 +63,13 @@ results <- data.frame(
   conf_high = c(correlation_size_p$conf.int[2], NA)
 )
 
+rownames(results) <- NULL
+
 write.table(
   results,
-  file = "outputs/results/popularity_size.txt",
-  sep = "\t",
+  file = "outputs/results/popularity_size.csv",
+  sep = ",",
+  row.names = FALSE,
   quote = FALSE
 )
 

@@ -1,0 +1,4 @@
+variable,correlation,p_value,ci_lower,ci_upper
+forks,0.583,0,0.5802,0.5858
+days_inactive,-0.0719,4.66e-244,-0.0761,-0.0677
+issues,0.2827,0,0.2788,0.2866
