@@ -88,9 +88,11 @@ curve(dnorm(x, mean = mu, sd = sigma),
 
 dev.off()
 
-# size density
+# size quantities
 
 png("outputs/images/sizes_normal.png", width = 800, height = 600, res = 100) 
+
+## adjust size data to MB
 size_s <- bytes_to_mb(data$size)
 hist(size_s,
      breaks = 50,

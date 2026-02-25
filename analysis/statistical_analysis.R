@@ -74,17 +74,20 @@ write.table(
 )
 
 # popularity and popularity of language
+
+## remove irelevante data
 languages_sorted <- languages[languages$language != 'No main language', ]
 data_with_language <- data[data$language != 'No main language', ]
 
+## popularity of language
 languages_sorted$popularity <- nrow(languages_sorted):1
-
 data_with_language$popularity_of_language <- languages_sorted$popularity[match(data_with_language$language, languages_sorted$language)]
 
-## H0 -> repository with more popular language is also more stared
-correlation_language_popularity <- cor.test(data_with_language$stars, data_with_language$popularity_of_language, method = 'pearson')
+## execute test
+correlation_language_popularity <- cor.test(data_with_language$stars, data_with_language$popularity_of_language, method = 'spearman')
 correlation_language_popularity
 
+## create visualisation
 png("outputs/images/stars_vs_language_popularity.png", width = 800, height = 600, res = 100) #
 ggplot(data_with_language, 
        aes(x = popularity_of_language, 
